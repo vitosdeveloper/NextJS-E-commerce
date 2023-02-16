@@ -1,10 +1,31 @@
 import { DepartamentsUl } from '@/components/mainPage/DepartamentsUl';
+import ItemCard from '@/components/mainPage/ItemCard';
 import { MainPage } from '@/components/mainPage/MainPage';
 import { SortBy } from '@/components/mainPage/SortBy';
 import { StoreItens } from '@/components/mainPage/StoreItens';
+import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
+import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [storeItens, setStoreItens] = useState<IStoreItem[]>([]);
+  const [pages, setPages] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        'https://vitos-ecommerce-server.onrender.com/itensDaLoja'
+      );
+      const json = await res.json();
+      setStoreItens(json);
+      for (let i = 0; i < json.length / 8; i++) {
+        setPages((prev) => [...prev, i + 1]);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <MainPage>
       <SortBy>
@@ -25,7 +46,18 @@ export default function Home() {
           <Link href=''>Tech</Link>
           <Link href=''>Programming</Link>
         </DepartamentsUl>
-        <div>cards</div>
+        <StoreItensContainer>
+          {storeItens?.map((storeItem) => (
+            <ItemCard key={storeItem._id} storeItem={storeItem} />
+          ))}
+          <div>
+            {pages.map((page) => (
+              <Link key={page} href={'/' + page}>
+                {page}
+              </Link>
+            ))}
+          </div>
+        </StoreItensContainer>
       </StoreItens>
     </MainPage>
   );

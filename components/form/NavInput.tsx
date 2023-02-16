@@ -1,7 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-
-type Props = {};
 
 const NavInput = styled.input`
   padding: 0.25rem;
