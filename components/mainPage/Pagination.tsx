@@ -1,9 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 
 type Props = {};
 
-const Pagination = (props: Props) => {
-  return <div>Pagination</div>;
-};
-
-export default Pagination;
+export const Pagination = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  justify-content: center;
+`;
