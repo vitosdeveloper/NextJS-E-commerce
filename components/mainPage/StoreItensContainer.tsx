@@ -5,7 +5,6 @@ const StoreItensContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 720px;
   gap: 1.25rem;
   @media (max-width: 790px) {
     justify-content: center;
