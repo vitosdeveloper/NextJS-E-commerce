@@ -23,7 +23,9 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: { params: { id: string } }) {
   const { id } = context.params;
-  const res = await fetch(process.env.NEXT_PUBLIC_URL + '/api/get/' + id);
+  const res = await fetch(process.env.NEXT_PUBLIC_URL + '/api/get/' + id, {
+    method: 'GET',
+  });
   const storeItens = await res.json();
 
   return {
@@ -51,8 +53,6 @@ export default function DynamicHome({ storeItens, page }: Props) {
     e.preventDefault();
     setSelectedDepartament(e.target.innerText);
     setSelectedPage(1);
-    //  procurar referência de numero de itens filtrados por departamento
-    // getPageNumbers(itensFilteredByDep);
   };
 
   const getPageNumbers = useCallback(async (list: IStoreItem[]) => {
@@ -79,6 +79,8 @@ export default function DynamicHome({ storeItens, page }: Props) {
     e.preventDefault();
     setSelectedPage(Number(e.target.innerText));
   };
+
+  const handleLinkClick = () => setSelectedDepartament('TODOS');
 
   useEffect(() => {
     const getDepartaments = () => {
@@ -110,9 +112,15 @@ export default function DynamicHome({ storeItens, page }: Props) {
   return (
     <MainPage>
       <SortBy>
-        <Link href='todos'>Todos</Link>
-        <Link href='promocao'>Em promoção</Link>
-        <Link href='maiscomprados'>Mais comprados</Link>
+        <Link onClick={handleLinkClick} href='todos'>
+          Todos
+        </Link>
+        <Link onClick={handleLinkClick} href='promocao'>
+          Em promoção
+        </Link>
+        <Link onClick={handleLinkClick} href='maiscomprados'>
+          Mais comprados
+        </Link>
       </SortBy>
 
       <StoreItens>

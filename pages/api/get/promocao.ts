@@ -2,6 +2,7 @@
 import { IStoreItem } from '@/types/types';
 import { MongoClient, WithId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { itensCollection } from '../dbConnect';
 
 const uri = process.env.URI;
 
@@ -21,17 +22,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  try {
-    const itens = await client
-      .db('ecommerce')
-      .collection<IStoreItem>('itens')
-      .find()
-      .toArray();
+  if (req.method === 'GET') {
+    try {
+      const itens = await itensCollection.find().toArray();
 
-    const filtrados = itens.filter((item) => item.status === 'promoção');
+      const filtrados = itens.filter((item) => item.status === 'promoção');
 
-    res.status(200).json({ itens: filtrados });
-  } catch (err: any) {
-    res.status(err.status).json({ error: err.message });
+      res.status(200).json({ itens: filtrados });
+    } catch (err: any) {
+      res.status(err.status).json({ error: err.message });
+    }
   }
 }

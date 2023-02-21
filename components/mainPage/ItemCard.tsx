@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import priceFormater from '@/utils/priceFormater';
 
 type Props = {
   storeItem: StoreItem;
@@ -33,13 +35,6 @@ const ItemCard = ({ storeItem }: Props) => {
     estoque,
     numDeCompras,
   } = storeItem;
-
-  const priceFormater = (price: string): string => {
-    const toNumber = Number(price);
-    const formato = { style: 'currency', currency: 'BRL' };
-    const formated = toNumber.toLocaleString('pt-BR', formato);
-    return formated;
-  };
 
   const handleUnfavoriteItem = (e: any) => {
     e.preventDefault();
@@ -82,15 +77,35 @@ const ItemCard = ({ storeItem }: Props) => {
   return (
     <Link href={'/items/' + _id}>
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span>promo</span>
-          {isFavorited ? (
-            <FavoriteIcon color='error' onClick={handleUnfavoriteItem} />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          {status === 'promoção' ? (
+            <LocalFireDepartmentIcon fontSize='small' color='error' />
           ) : (
-            <FavoriteBorderIcon color='error' onClick={handleFavoriteItem} />
+            <div></div>
+          )}
+          {isFavorited ? (
+            <FavoriteIcon
+              fontSize='small'
+              color='error'
+              onClick={handleUnfavoriteItem}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              fontSize='small'
+              color='error'
+              onClick={handleFavoriteItem}
+            />
           )}
         </div>
-        <Image width='170' height='170' src={productImg} alt='' />
+        <div style={{ borderRadius: '3px', overflow: 'hidden' }}>
+          <Image width='170' height='170' src={productImg} alt='' />
+        </div>
         <h3 style={{ width: '170px' }}>{productTitle.slice(0, 66) + '...'}</h3>
         <div style={{ display: 'grid', gap: '5px' }}>
           <h2>{priceFormater(productPrice)}</h2>
@@ -106,11 +121,11 @@ export default ItemCard;
 
 const Card = styled.div`
   border: 1px solid #eee;
-  padding: 1.25rem 1.25rem;
+  padding: 0.75rem 1rem 1.25rem 1rem;
   border-radius: 8px;
   box-shadow: 10px 10px 5px rgb(255 255 255 / 10%);
   display: flex;
   flex-direction: column;
   word-break: break-all;
-  gap: 1rem;
+  gap: 0.55rem;
 `;

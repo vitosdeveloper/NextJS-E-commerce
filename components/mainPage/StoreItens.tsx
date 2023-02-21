@@ -5,9 +5,10 @@ export const StoreItens = styled.div`
   display: flex;
   gap: 3rem;
   /* align-self: start; */
-  margin: 0 auto;
+  margin-right: auto;
   @media (max-width: 725px) {
     flex-direction: column;
     text-align: center;
+    margin: 0 auto;
   }
 `;
