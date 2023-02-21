@@ -9,6 +9,7 @@ import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
 import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import usePagination from '@/utils/usePagination';
 
 export async function getStaticPaths() {
   return {
@@ -37,8 +38,14 @@ export async function getStaticProps(context: { params: { id: string } }) {
 type Props = { storeItens: { itens: IStoreItem[] }; page: string };
 
 export default function DynamicHome({ storeItens, page }: Props) {
-  const [pages, setPages] = useState<number[]>([]);
-  const [selectedPage, setSelectedPage] = useState<number>(1);
+  const {
+    setSelectedPage,
+    itens,
+    filterItensPerSelectedPage,
+    getPageNumbers,
+    PagesComponent,
+  } = usePagination(storeItens, page);
+
   const [departaments, setDepartaments] = useState<string[]>([]);
   const [selectedDepartament, setSelectedDepartament] =
     useState<string>('TODOS');
@@ -46,38 +53,10 @@ export default function DynamicHome({ storeItens, page }: Props) {
     []
   );
 
-  const { itens } = storeItens;
-  const itensPerPage = 6;
-
   const handleDepartamentClick = (e: any) => {
     e.preventDefault();
     setSelectedDepartament(e.target.innerText);
     setSelectedPage(1);
-  };
-
-  const getPageNumbers = useCallback(async (list: IStoreItem[]) => {
-    setPages(() => {
-      let pagesArr = [];
-      for (let i = 0; i < list.length / itensPerPage; i++) {
-        pagesArr.push(i + 1);
-      }
-      return pagesArr;
-    });
-  }, []);
-
-  const filterItensPerSelectedPage = useCallback(
-    (storeItemList: IStoreItem[]) => {
-      return storeItemList.filter((storeItem, index) => {
-        const range = itensPerPage * selectedPage;
-        return index >= range - itensPerPage && index < range;
-      });
-    },
-    [selectedPage]
-  );
-
-  const handlePageClick = (e: any) => {
-    e.preventDefault();
-    setSelectedPage(Number(e.target.innerText));
   };
 
   const handleLinkClick = () => setSelectedDepartament('TODOS');
@@ -137,19 +116,7 @@ export default function DynamicHome({ storeItens, page }: Props) {
             <ItemCard key={storeItem._id} storeItem={storeItem} />
           ))}
 
-          <Pagination>
-            [
-            {pages.map((pageNumber) => (
-              <Link
-                onClick={handlePageClick}
-                key={pageNumber}
-                href={page + '/page/' + pageNumber}
-              >
-                {pageNumber}
-              </Link>
-            ))}
-            ]
-          </Pagination>
+          <PagesComponent />
         </StoreItensContainer>
       </StoreItens>
     </MainPage>
