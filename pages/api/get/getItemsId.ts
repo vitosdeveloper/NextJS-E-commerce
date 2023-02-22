@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { WithId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { itensCollection } from '../dbConnect';
 
 type Data =
   | {
-      itensId: string[];
+      itensId: ObjectId[];
     }
   | {
       error: {
