@@ -10,7 +10,7 @@ const client = new MongoClient(uri!);
 
 type Data =
   | {
-      itens: WithId<IStoreItem>[];
+      itens: WithId<any>[];
     }
   | {
       error: {
