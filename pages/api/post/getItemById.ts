@@ -1,12 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { IStoreItem } from '@/types/types';
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { itensCollection } from '../dbConnect';
 
 type Data =
   | {
-      item: WithId<any>;
+      item: any;
     }
   | {
       error: {
@@ -21,8 +20,9 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const itemId = JSON.parse(req.body);
-      const query: any = { _id: new ObjectId(itemId) };
-      const item = await itensCollection.findOne(query);
+      const query = { _id: new ObjectId(itemId) };
+      const itemWithWrongId = await itensCollection.findOne(query);
+      const item = { ...itemWithWrongId, _id: itemWithWrongId?._id.toString() };
 
       res.status(200).json({ item });
     } catch (err: any) {

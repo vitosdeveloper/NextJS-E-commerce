@@ -1,17 +1,12 @@
-import { UpdatedDataType } from '@/types/types';
 import useSWR from 'swr';
 
 const useGetUpdatedData = (id: string) => {
-  const fetcher = (args: string) =>
+  const fetcher = (args: any) =>
     fetch(args, {
       method: 'POST',
       body: JSON.stringify(id),
     }).then((res) => res.json());
-  const {
-    data,
-    error,
-    isLoading,
-  }: { data: UpdatedDataType; error: any; isLoading: any } = useSWR(
+  const { data, error, isLoading } = useSWR(
     '/api/post/getUpdatedDataById/',
     fetcher
   );

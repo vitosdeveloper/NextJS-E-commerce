@@ -5,11 +5,14 @@ import priceFormater from '@/utils/priceFormater';
 import useGetUpdatedData from '@/utils/useGetUpdatedData';
 import Image from 'next/image';
 import styled from 'styled-components';
+import useSWR from 'swr';
 
 export const getStaticPaths = async () => {
   const res = await fetch(process.env.NEXT_PUBLIC_URL + '/api/get/getItemsId');
-  const { itensId } = await res.json();
-  const paths = itensId.map((itemId: string) => ({ params: { itemId } }));
+  const json = await res.json();
+  const paths = json.itensId.map((itemId: string) => ({
+    params: { itemId },
+  }));
 
   return {
     paths,
@@ -27,6 +30,7 @@ export const getStaticProps = async (context: any) => {
     }
   );
   const storeItem = await res.json();
+  console.log(storeItem);
   return {
     props: { storeItem },
   };
@@ -38,7 +42,15 @@ const ItemPage = ({ storeItem }: Props) => {
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
     storeItem.item;
 
-  const { data } = useGetUpdatedData(_id);
+  const fetcher = (args: any) =>
+    fetch(args, {
+      method: 'POST',
+      body: JSON.stringify(_id),
+    }).then((res) => res.json());
+  const { data, error, isLoading } = useSWR(
+    '/api/post/getUpdatedDataById/',
+    fetcher
+  );
 
   return (
     <ItemContainer>

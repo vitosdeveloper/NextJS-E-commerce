@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { itensCollection } from '../dbConnect';
 
 type Data =
   | {
-      itensId: ObjectId[];
+      itensId: string[];
     }
   | {
       error: {
@@ -20,7 +20,7 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       const itens = await itensCollection.find().toArray();
-      const itensId = itens.map((item) => item._id);
+      const itensId = itens.map((item) => item._id.toString());
 
       res.status(200).json({ itensId });
     } catch (err: any) {

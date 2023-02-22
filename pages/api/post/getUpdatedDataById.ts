@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { itensCollection } from '../dbConnect';
 
 type Data =
-  | UpdatedDataType
+  | any
   | {
       error: { message: string };
     };
