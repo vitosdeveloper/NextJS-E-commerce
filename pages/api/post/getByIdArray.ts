@@ -4,7 +4,7 @@ import { itensCollection } from '../dbConnect';
 import { IStoreItem } from '@/types/types';
 import { WithId } from 'mongodb';
 
-type Data = { getFavorites: WithId<IStoreItem>[] } | { message: string };
+type Data = { getFavorites: WithId<any> } | { message: string };
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +15,7 @@ export default async function handler(
       const listJson = req.body;
       const list: string[] = JSON.parse(listJson);
       const itensList = await itensCollection.find().toArray();
-      const getFavorites = itensList.filter(({ _id }: IStoreItem) =>
+      const getFavorites = itensList.filter(({ _id }) =>
         list.includes(_id.toString())
       );
 

@@ -6,7 +6,7 @@ import { itensCollection } from '../dbConnect';
 
 type Data =
   | {
-      item: WithId<IStoreItem> | null;
+      item: WithId<any>;
     }
   | {
       error: {
