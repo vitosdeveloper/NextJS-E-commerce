@@ -31,7 +31,7 @@ export async function getStaticProps(context: { params: { id: string } }) {
 
   return {
     props: { storeItens, page: id },
-    revalidate: 3600,
+    // revalidate: 60,
   };
 }
 

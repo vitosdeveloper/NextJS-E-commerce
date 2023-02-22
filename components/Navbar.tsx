@@ -8,7 +8,7 @@ type Props = {};
 const Navbar = (props: Props) => {
   return (
     <Nav>
-      <Link href='/'>
+      <Link href='/todos'>
         <Logo>Next Ecommerce</Logo>
       </Link>
       <NavInput />

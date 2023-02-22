@@ -8,3 +8,9 @@ export interface IStoreItem {
   estoque: number;
   numDeCompras: number;
 }
+
+export type UpdatedDataType = {
+  productPrice: string;
+  estoque: number;
+  numDeCompras: number;
+};

@@ -1,6 +1,7 @@
 import { IStoreItem } from '@/types/types';
 import priceFormater from '@/utils/priceFormater';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 import ButtonFavAndCart from '../form/ButtonFavAndCart';
@@ -14,22 +15,24 @@ const StoreItemSmall = ({ item, unfav }: Props) => {
   const { _id, productImg, productTitle, productPrice } = item;
 
   return (
-    <SmallItemContainer>
-      <SmallItemDetails>
-        <Image src={productImg} alt='' height='120' width='120' />
-        <SmallTitleAndPrice>
-          <h4>{productTitle}</h4>
-          <h4>{priceFormater(productPrice)}</h4>
-        </SmallTitleAndPrice>
-      </SmallItemDetails>
+    <Link href={'/item/' + _id}>
+      <SmallItemContainer>
+        <SmallItemDetails>
+          <Image src={productImg} alt='' height='120' width='120' />
+          <SmallTitleAndPrice>
+            <h4>{productTitle}</h4>
+            <h4>{priceFormater(productPrice)}</h4>
+          </SmallTitleAndPrice>
+        </SmallItemDetails>
 
-      <SmallItemDetails>
-        <ButtonFavAndCart onClick={unfav}>
-          excluir dos favoritos
-        </ButtonFavAndCart>
-        <ButtonFavAndCart>colocar no carrinho</ButtonFavAndCart>
-      </SmallItemDetails>
-    </SmallItemContainer>
+        <SmallItemDetails>
+          <ButtonFavAndCart onClick={unfav}>
+            excluir dos favoritos
+          </ButtonFavAndCart>
+          <ButtonFavAndCart>colocar no carrinho</ButtonFavAndCart>
+        </SmallItemDetails>
+      </SmallItemContainer>
+    </Link>
   );
 };
 
