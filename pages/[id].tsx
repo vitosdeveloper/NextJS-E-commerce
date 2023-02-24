@@ -1,4 +1,3 @@
-import React, { MouseEventHandler, useCallback } from 'react';
 import { DepartamentsUl } from '@/components/mainPage/DepartamentsUl';
 import ItemCard from '@/components/mainPage/ItemCard';
 import { MainPage } from '@/components/mainPage/MainPage';
@@ -9,9 +8,9 @@ import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
 import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import usePagination from '@/utils/usePagination';
+import usePagination from '@/custom-hooks/usePagination';
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   return {
     paths: [
       { params: { id: 'todos' } },
@@ -20,7 +19,7 @@ export async function getStaticPaths() {
     ],
     fallback: false,
   };
-}
+};
 
 export async function getStaticProps(context: { params: { id: string } }) {
   const { id } = context.params;
@@ -31,7 +30,6 @@ export async function getStaticProps(context: { params: { id: string } }) {
 
   return {
     props: { storeItens, page: id },
-    // revalidate: 60,
   };
 }
 
@@ -104,7 +102,7 @@ export default function DynamicHome({ storeItens, page }: Props) {
 
       <StoreItens>
         <DepartamentsUl>
-          {departaments.map((departament) => (
+          {departaments?.map((departament) => (
             <Link onClick={handleDepartamentClick} key={departament} href='#'>
               {departament}
             </Link>
@@ -112,7 +110,7 @@ export default function DynamicHome({ storeItens, page }: Props) {
         </DepartamentsUl>
 
         <StoreItensContainer>
-          {itensFilteredByDep.map((storeItem) => (
+          {itensFilteredByDep?.map((storeItem) => (
             <ItemCard key={storeItem._id} storeItem={storeItem} />
           ))}
 

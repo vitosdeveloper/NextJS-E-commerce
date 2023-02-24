@@ -1,5 +1,4 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { IStoreItem } from '@/types/types';
 import { WithId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { itensCollection } from '../dbConnect';
@@ -22,7 +21,7 @@ export default async function handler(
     try {
       const itens = await itensCollection.find().toArray();
 
-      res.status(200).json({ itens });
+      res.status(200).send({ itens });
     } catch (err: any) {
       res.status(err.status).json({ error: err.message });
     }

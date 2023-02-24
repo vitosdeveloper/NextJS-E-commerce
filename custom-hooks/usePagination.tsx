@@ -33,7 +33,7 @@ const usePagination = (storeItens: { itens: IStoreItem[] }, page: string) => {
 
   const filterItensPerSelectedPage = useCallback(
     (storeItemList: IStoreItem[]) => {
-      return storeItemList.filter((storeItem, index) => {
+      return storeItemList?.filter((storeItem, index) => {
         const range = itensPerPage * selectedPage;
         return index >= range - itensPerPage && index < range;
       });

@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import priceFormater from '@/utils/priceFormater';
-import useGetUpdatedData from '@/utils/useGetUpdatedData';
+import useGetUpdatedData from '@/custom-hooks/useGetUpdatedData';
 
 type Props = {
   storeItem: StoreItem;

@@ -19,14 +19,14 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const itemId = JSON.parse(req.body);
+      const itemId = req.body;
       const query = { _id: new ObjectId(itemId) };
       const itemWithWrongId = await itensCollection.findOne(query);
       const item = { ...itemWithWrongId, _id: itemWithWrongId?._id.toString() };
 
       res.status(200).json({ item });
     } catch (err: any) {
-      res.status(err.status).json({ error: err.message });
+      res.status(err.status).json({ error: err });
     }
   }
 }

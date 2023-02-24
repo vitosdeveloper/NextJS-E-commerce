@@ -2,38 +2,56 @@ import ButtonFavAndCart from '@/components/form/ButtonFavAndCart';
 import Title from '@/components/text/Title';
 import { IStoreItem } from '@/types/types';
 import priceFormater from '@/utils/priceFormater';
-import useGetUpdatedData from '@/utils/useGetUpdatedData';
+import useGetUpdatedData from '@/custom-hooks/useGetUpdatedData';
 import Image from 'next/image';
 import styled from 'styled-components';
-import useSWR from 'swr';
 
 export const getStaticPaths = async () => {
-  const res = await fetch(process.env.NEXT_PUBLIC_URL + '/api/get/getItemsId');
-  const json = await res.json();
-  const paths = json.itensId.map((itemId: string) => ({
-    params: { itemId },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
+  try {
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_URL + '/api/get/getItemsId',
+      {
+        method: 'GET',
+      }
+    );
+    if (res.status === 200) {
+      const json = await res.json();
+      const paths = json?.itensId?.map((itemId: any) => ({
+        params: { itemId: itemId.toString() },
+      }));
+      return {
+        paths: paths,
+        fallback: false,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      paths: [],
+      fallback: false,
+    };
+  }
 };
 
 export const getStaticProps = async (context: any) => {
-  const { itemId } = context.params;
-  const res = await fetch(
-    process.env.NEXT_PUBLIC_URL + '/api/post/getItemById/',
-    {
-      method: 'POST',
-      body: JSON.stringify(itemId),
+  try {
+    const itemId: string = context.params.itemId;
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_URL + '/api/post/getItemById',
+      {
+        method: 'POST',
+        body: itemId,
+      }
+    );
+    if (res.status === 200) {
+      const storeItem = await res.json();
+      return {
+        props: { storeItem },
+      };
     }
-  );
-  const storeItem = await res.json();
-  console.log(storeItem);
-  return {
-    props: { storeItem },
-  };
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 type Props = { storeItem: { item: IStoreItem } };
@@ -42,15 +60,7 @@ const ItemPage = ({ storeItem }: Props) => {
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
     storeItem.item;
 
-  const fetcher = (args: any) =>
-    fetch(args, {
-      method: 'POST',
-      body: JSON.stringify(_id),
-    }).then((res) => res.json());
-  const { data, error, isLoading } = useSWR(
-    '/api/post/getUpdatedDataById/',
-    fetcher
-  );
+  const { data, error, isLoading } = useGetUpdatedData(_id);
 
   return (
     <ItemContainer>

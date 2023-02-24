@@ -5,7 +5,7 @@ import { itensCollection } from '../dbConnect';
 
 type Data =
   | {
-      itensId: string[];
+      itensId: any;
     }
   | {
       error: {

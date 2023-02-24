@@ -45,8 +45,8 @@ const Favoritos = (props: Props) => {
   return (
     <MenuContainer>
       <Title>Favoritos❤️</Title>
-      {favoritedItens.length > 0 ? (
-        favoritedItens.map((item) => (
+      {favoritedItens?.length > 0 ? (
+        favoritedItens?.map((item) => (
           <StoreItemSmall
             key={item._id}
             item={item}
