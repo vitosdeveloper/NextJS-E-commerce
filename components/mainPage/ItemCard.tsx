@@ -6,7 +6,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import priceFormater from '@/utils/priceFormater';
-import useGetUpdatedData from '@/custom-hooks/useGetUpdatedData';
 
 type Props = {
   storeItem: StoreItem;
@@ -36,8 +35,6 @@ const ItemCard = ({ storeItem }: Props) => {
     estoque,
     numDeCompras,
   } = storeItem;
-
-  const { data } = useGetUpdatedData(_id);
 
   const handleUnfavoriteItem = (e: any) => {
     e.preventDefault();
@@ -111,13 +108,9 @@ const ItemCard = ({ storeItem }: Props) => {
         </div>
         <h3 style={{ width: '170px' }}>{productTitle.slice(0, 66) + '...'}</h3>
         <div style={{ display: 'grid', gap: '5px' }}>
-          <h2>
-            {data
-              ? priceFormater(data.productPrice)
-              : priceFormater(productPrice)}
-          </h2>
+          <h2>{priceFormater(productPrice)}</h2>
           <small>À vista no PIX</small>
-          <span>({data ? data.estoque : estoque} em estoque)</span>
+          <span>({estoque} em estoque)</span>
         </div>
       </Card>
     </Link>

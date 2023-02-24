@@ -1,7 +1,6 @@
 import { DepartamentsUl } from '@/components/mainPage/DepartamentsUl';
 import ItemCard from '@/components/mainPage/ItemCard';
 import { MainPage } from '@/components/mainPage/MainPage';
-import { Pagination } from '@/components/mainPage/Pagination';
 import { SortBy } from '@/components/mainPage/SortBy';
 import { StoreItens } from '@/components/mainPage/StoreItens';
 import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
@@ -9,6 +8,8 @@ import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import usePagination from '@/custom-hooks/usePagination';
+import { itensCollection } from '@/utils/dbConnect';
+import { Document, WithId } from 'mongodb';
 
 export const getStaticPaths = async () => {
   return {
@@ -23,26 +24,51 @@ export const getStaticPaths = async () => {
 
 export async function getStaticProps(context: { params: { id: string } }) {
   const { id } = context.params;
-  const res = await fetch(process.env.NEXT_PUBLIC_URL + '/api/get/' + id, {
-    method: 'GET',
-  });
-  const storeItens = await res.json();
+  const transformId = (arr: WithId<Document>[]) =>
+    arr.map((item) => ({ ...item, _id: item._id.toString() }));
 
-  return {
-    props: { storeItens, page: id },
-  };
+  try {
+    const query = await itensCollection!.find().toArray();
+    if (id === 'todos') {
+      const storeItens = transformId(query);
+      return {
+        props: { storeItens, page: id },
+      };
+    } else if (id === 'promocao') {
+      const filtered = query.filter((item) => item.status === 'promoção');
+      const storeItens = transformId(filtered);
+      return {
+        props: { storeItens, page: id },
+      };
+    } else if (id === 'maiscomprados') {
+      const filtered = query
+        .filter((item) => item.numDeCompras > 0)
+        .sort((a, b) => {
+          return a.numDeCompras - b.numDeCompras;
+        })
+        .reverse();
+      const storeItens = transformId(filtered);
+      return {
+        props: { storeItens, page: id },
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      props: { storeItens: [], page: id },
+    };
+  }
 }
 
-type Props = { storeItens: { itens: IStoreItem[] }; page: string };
+type Props = { storeItens: IStoreItem[]; page: string };
 
 export default function DynamicHome({ storeItens, page }: Props) {
   const {
     setSelectedPage,
-    itens,
     filterItensPerSelectedPage,
     getPageNumbers,
     PagesComponent,
-  } = usePagination(storeItens, page);
+  } = usePagination(page);
 
   const [departaments, setDepartaments] = useState<string[]>([]);
   const [selectedDepartament, setSelectedDepartament] =
@@ -57,13 +83,16 @@ export default function DynamicHome({ storeItens, page }: Props) {
     setSelectedPage(1);
   };
 
-  const handleLinkClick = () => setSelectedDepartament('TODOS');
+  const handleLinkClick = () => {
+    setSelectedDepartament('TODOS');
+    setSelectedPage(1);
+  };
 
   useEffect(() => {
     const getDepartaments = () => {
       setDepartaments(() => {
         let departArr: string[] = ['TODOS'];
-        itens.forEach((item) => {
+        storeItens.forEach((item) => {
           !departArr.includes(item.class) && departArr.push(item.class);
         });
         return departArr;
@@ -71,20 +100,25 @@ export default function DynamicHome({ storeItens, page }: Props) {
     };
     getDepartaments();
 
-    getPageNumbers(itens);
-    setItensFilteredByDep(filterItensPerSelectedPage(itens));
-  }, [itens, getPageNumbers, filterItensPerSelectedPage]);
+    getPageNumbers(storeItens);
+    setItensFilteredByDep(filterItensPerSelectedPage(storeItens));
+  }, [storeItens, getPageNumbers, filterItensPerSelectedPage]);
 
   useEffect(() => {
     setItensFilteredByDep(() => {
-      const filtered = itens.filter((storeItem: any) => {
+      const filtered = storeItens.filter((storeItem: any) => {
         if (selectedDepartament === 'TODOS') return storeItem;
         else return storeItem.class === selectedDepartament;
       });
       getPageNumbers(filtered);
       return filterItensPerSelectedPage(filtered);
     });
-  }, [selectedDepartament, itens, filterItensPerSelectedPage, getPageNumbers]);
+  }, [
+    selectedDepartament,
+    storeItens,
+    filterItensPerSelectedPage,
+    getPageNumbers,
+  ]);
 
   return (
     <MainPage>

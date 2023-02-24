@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { itensCollection } from '../dbConnect';
-import { IStoreItem } from '@/types/types';
+import { itensCollection } from '../../../utils/dbConnect';
 import { WithId } from 'mongodb';
 
 type Data = { getFavorites: WithId<any> } | { message: string };
@@ -14,7 +13,7 @@ export default async function handler(
     try {
       const listJson = req.body;
       const list: string[] = JSON.parse(listJson);
-      const itensList = await itensCollection.find().toArray();
+      const itensList = await itensCollection!.find().toArray();
       const getFavorites = itensList.filter(({ _id }) =>
         list.includes(_id.toString())
       );

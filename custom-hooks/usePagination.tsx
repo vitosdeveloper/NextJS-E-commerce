@@ -3,7 +3,7 @@ import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 
-const usePagination = (storeItens: { itens: IStoreItem[] }, page: string) => {
+const usePagination = (page: string) => {
   const [pages, setPages] = useState<number[]>([]);
   const [selectedPage, setSelectedPage] = useState<number>(1);
 
@@ -28,7 +28,6 @@ const usePagination = (storeItens: { itens: IStoreItem[] }, page: string) => {
     </Pagination>
   );
 
-  const { itens } = storeItens;
   const itensPerPage = 6;
 
   const filterItensPerSelectedPage = useCallback(
@@ -53,7 +52,6 @@ const usePagination = (storeItens: { itens: IStoreItem[] }, page: string) => {
 
   return {
     setSelectedPage,
-    itens,
     filterItensPerSelectedPage,
     getPageNumbers,
     PagesComponent,

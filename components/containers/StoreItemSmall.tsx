@@ -14,6 +14,11 @@ type Props = {
 const StoreItemSmall = ({ item, unfav }: Props) => {
   const { _id, productImg, productTitle, productPrice } = item;
 
+  const handleUnfavClick = (e: any) => {
+    e.preventDefault();
+    if (unfav) unfav();
+  };
+
   return (
     <Link href={'/item/' + _id}>
       <SmallItemContainer>
@@ -26,7 +31,7 @@ const StoreItemSmall = ({ item, unfav }: Props) => {
         </SmallItemDetails>
 
         <SmallItemDetails>
-          <ButtonFavAndCart onClick={unfav}>
+          <ButtonFavAndCart onClick={handleUnfavClick}>
             excluir dos favoritos
           </ButtonFavAndCart>
           <ButtonFavAndCart>colocar no carrinho</ButtonFavAndCart>

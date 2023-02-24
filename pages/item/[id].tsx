@@ -1,66 +1,55 @@
 import ButtonFavAndCart from '@/components/form/ButtonFavAndCart';
 import Title from '@/components/text/Title';
 import { IStoreItem } from '@/types/types';
+import { itensCollection } from '@/utils/dbConnect';
 import priceFormater from '@/utils/priceFormater';
-import useGetUpdatedData from '@/custom-hooks/useGetUpdatedData';
+import { ObjectId } from 'mongodb';
 import Image from 'next/image';
 import styled from 'styled-components';
 
 export const getStaticPaths = async () => {
   try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_URL + '/api/get/getItemsId',
-      {
-        method: 'GET',
-      }
-    );
-    if (res.status === 200) {
-      const json = await res.json();
-      const paths = json?.itensId?.map((itemId: any) => ({
-        params: { itemId: itemId.toString() },
-      }));
-      return {
-        paths: paths,
-        fallback: false,
-      };
-    }
+    const itens = await itensCollection!.find().toArray();
+    const paths = itens.map((item) => ({
+      params: { id: item._id.toString() },
+    }));
+    return {
+      paths,
+      fallback: false,
+    };
   } catch (err) {
     console.log(err);
+    return { paths: [], fallback: false };
+  }
+};
+
+export const getStaticProps = async (context: { params: { id: string } }) => {
+  try {
+    const { id } = context.params;
+    const query = { _id: new ObjectId(id) };
+    const itemWithWrongId = await itensCollection!.findOne(query);
+    const storeItem = {
+      ...itemWithWrongId,
+      _id: itemWithWrongId?._id.toString(),
+    };
+
     return {
-      paths: [],
-      fallback: false,
+      props: { storeItem },
+      revalidate: 10,
+    };
+  } catch (err) {
+    return {
+      props: { storeItem: {} },
+      revalidate: 10,
     };
   }
 };
 
-export const getStaticProps = async (context: any) => {
-  try {
-    const itemId: string = context.params.itemId;
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_URL + '/api/post/getItemById',
-      {
-        method: 'POST',
-        body: itemId,
-      }
-    );
-    if (res.status === 200) {
-      const storeItem = await res.json();
-      return {
-        props: { storeItem },
-      };
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-type Props = { storeItem: { item: IStoreItem } };
+type Props = { storeItem: IStoreItem };
 
 const ItemPage = ({ storeItem }: Props) => {
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
-    storeItem.item;
-
-  const { data, error, isLoading } = useGetUpdatedData(_id);
+    storeItem;
 
   return (
     <ItemContainer>
@@ -75,18 +64,12 @@ const ItemPage = ({ storeItem }: Props) => {
         />
         <FlexWithGap direction='column'>
           <p>
-            Disponíveis no estoque:{' '}
-            <strong>{data ? data.estoque : estoque}</strong>
+            Disponíveis no estoque: <strong>{estoque}</strong>
           </p>
           <p>
-            Comprado <strong>{data ? data.numDeCompras : numDeCompras}</strong>{' '}
-            vezes.
+            Comprado <strong>{numDeCompras}</strong> vezes.
           </p>
-          <h2>
-            {data
-              ? priceFormater(data.productPrice)
-              : priceFormater(productPrice)}
-          </h2>
+          <h2>{priceFormater(productPrice)}</h2>
           <FlexWithGap style={{ display: 'flex', gap: '1rem' }}>
             <ButtonFavAndCart>Colocar no carrinho</ButtonFavAndCart>
             <ButtonFavAndCart>Comprar</ButtonFavAndCart>
