@@ -3,6 +3,7 @@ import Title from '@/components/text/Title';
 import { IStoreItem } from '@/types/types';
 import { itensCollection } from '@/utils/dbConnect';
 import priceFormater from '@/utils/priceFormater';
+import { putIntoLocalStorage } from '@/utils/putIntoLocalStorage';
 import { ObjectId } from 'mongodb';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -51,6 +52,11 @@ const ItemPage = ({ storeItem }: Props) => {
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
     storeItem;
 
+  const handlePutOnCartClick = (e: any) => {
+    e.preventDefault();
+    putIntoLocalStorage('storeCartItens', _id);
+  };
+
   return (
     <ItemContainer>
       <Title>{productTitle}</Title>
@@ -71,7 +77,9 @@ const ItemPage = ({ storeItem }: Props) => {
           </p>
           <h2>{priceFormater(productPrice)}</h2>
           <FlexWithGap style={{ display: 'flex', gap: '1rem' }}>
-            <ButtonFavAndCart>Colocar no carrinho</ButtonFavAndCart>
+            <ButtonFavAndCart onClick={handlePutOnCartClick}>
+              Colocar no carrinho
+            </ButtonFavAndCart>
             <ButtonFavAndCart>Comprar</ButtonFavAndCart>
           </FlexWithGap>
         </FlexWithGap>

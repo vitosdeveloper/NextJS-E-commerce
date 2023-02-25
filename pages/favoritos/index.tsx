@@ -1,56 +1,33 @@
 import MenuContainer from '@/components/containers/MenuContainer';
-import StoreItemSmall from '@/components/containers/StoreItemSmall';
+import StoreItemSmall from '@/components/StoreItemSmall';
 import Title from '@/components/text/Title';
+import useGetItensById from '@/custom-hooks/useGetItensById';
 import { IStoreItem } from '@/types/types';
-import React, { useEffect, useState } from 'react';
+import { putIntoLocalStorage } from '@/utils/putIntoLocalStorage';
+import React from 'react';
 
 type Props = {};
 
 const Favoritos = (props: Props) => {
-  const [favoritedItens, setFavoritedItens] = useState<IStoreItem[]>([]);
+  const { itensFromLocalstorage, removeFromLocalStorage } =
+    useGetItensById('storeFavItens');
 
-  const handleUnfavorite = (id: string) => {
-    const prevItensJson = window.localStorage.getItem('storeFavItens')!;
-    const prevItens: string[] = JSON.parse(prevItensJson);
-    const withoutThisItem = prevItens.filter((item) => item !== id);
-    window.localStorage.setItem(
-      'storeFavItens',
-      JSON.stringify(withoutThisItem)
-    );
-    setFavoritedItens((prev) => prev.filter((item) => item._id !== id));
+  const handleRemoveFromLocalStorage = (id: string) => {
+    removeFromLocalStorage(id);
   };
-
-  useEffect(() => {
-    const storeFavoritedItensJson =
-      window.localStorage.getItem('storeFavItens');
-    if (storeFavoritedItensJson) {
-      const getItensById = async () => {
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_URL + '/api/post/getByIdArray',
-          {
-            method: 'POST',
-            body: storeFavoritedItensJson,
-          }
-        );
-        if (res.status === 200) {
-          const favItens = await res.json();
-          setFavoritedItens(favItens.getFavorites);
-        }
-      };
-      getItensById();
-    } else {
-      setFavoritedItens([]);
-    }
-  }, []);
   return (
     <MenuContainer>
       <Title>Favoritos❤️</Title>
-      {favoritedItens?.length > 0 ? (
-        favoritedItens?.map((item) => (
+      {itensFromLocalstorage?.length > 0 ? (
+        itensFromLocalstorage?.map((item) => (
           <StoreItemSmall
             key={item._id}
             item={item}
-            unfav={() => handleUnfavorite(item._id)}
+            btn1Text='Excluir dos favoritos'
+            btn2Text='Colocar no carrinho'
+            btn1Func={() => removeFromLocalStorage(item._id)}
+            btn2Func={() => putIntoLocalStorage('storeCartItens', item._id)}
+            cart={false}
           />
         ))
       ) : (

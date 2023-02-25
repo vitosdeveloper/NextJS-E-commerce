@@ -7,6 +7,8 @@ const ButtonFavAndCart = styled.button`
   &:hover {
     cursor: pointer;
   }
+  border-radius: 8px;
+  background: #333;
 `;
 
 export default ButtonFavAndCart;

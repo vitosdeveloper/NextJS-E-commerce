@@ -15,8 +15,8 @@ const Navbar = (props: Props) => {
       <LinkList>
         <Link href='/login'>Login</Link>
         <Link href='/favoritos'>Favoritos</Link>
-        <Link href='carrinho'>Carrinho</Link>
-        <Link href='hist'>Meus pedidos</Link>
+        <Link href='/carrinho'>Carrinho</Link>
+        <Link href='/hist'>Meus pedidos</Link>
       </LinkList>
     </Nav>
   );

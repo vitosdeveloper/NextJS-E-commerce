@@ -6,6 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import priceFormater from '@/utils/priceFormater';
+import { putIntoLocalStorage } from '@/utils/putIntoLocalStorage';
 
 type Props = {
   storeItem: StoreItem;
@@ -50,15 +51,8 @@ const ItemCard = ({ storeItem }: Props) => {
 
   const handleFavoriteItem = (e: any) => {
     e.preventDefault();
-    const prevItensJson = window.localStorage.getItem('storeFavItens');
-    const prevItens = prevItensJson ? JSON.parse(prevItensJson) : [];
-    const favHasThisItem = prevItens.includes(_id);
-
+    const favHasThisItem = putIntoLocalStorage('storeFavItens', _id);
     if (!favHasThisItem) {
-      window.localStorage.setItem(
-        'storeFavItens',
-        JSON.stringify([...prevItens, _id])
-      );
       setIsFavorited(true);
     }
   };

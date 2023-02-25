@@ -1,12 +1,12 @@
 import { DepartamentsUl } from '@/components/mainPage/DepartamentsUl';
-import ItemCard from '@/components/mainPage/ItemCard';
+import ItemCard from '@/components/ItemCard';
 import { MainPage } from '@/components/mainPage/MainPage';
 import { SortBy } from '@/components/mainPage/SortBy';
 import { StoreItens } from '@/components/mainPage/StoreItens';
 import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
 import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import usePagination from '@/custom-hooks/usePagination';
 import { itensCollection } from '@/utils/dbConnect';
 import { Document, WithId } from 'mongodb';
