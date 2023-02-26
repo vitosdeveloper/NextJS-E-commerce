@@ -4,13 +4,13 @@ import { IStoreItem } from '@/types/types';
 import { itensCollection } from '@/utils/dbConnect';
 import priceFormater from '@/utils/priceFormater';
 import { putIntoLocalStorage } from '@/utils/putIntoLocalStorage';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import Image from 'next/image';
 import styled from 'styled-components';
 
 export const getStaticPaths = async () => {
   try {
-    const itens = await itensCollection!.find().toArray();
+    const itens: WithId<Document>[] = await itensCollection!.find().toArray();
     const paths = itens.map((item) => ({
       params: { id: item._id.toString() },
     }));
@@ -28,7 +28,9 @@ export const getStaticProps = async (context: { params: { id: string } }) => {
   try {
     const { id } = context.params;
     const query = { _id: new ObjectId(id) };
-    const itemWithWrongId = await itensCollection!.findOne(query);
+    const itemWithWrongId: WithId<Document> = await itensCollection!.findOne(
+      query
+    );
     const storeItem = {
       ...itemWithWrongId,
       _id: itemWithWrongId?._id.toString(),

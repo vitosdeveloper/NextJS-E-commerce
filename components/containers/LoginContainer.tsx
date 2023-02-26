@@ -3,18 +3,20 @@ import styled from 'styled-components';
 type Props = {};
 
 const LoginContainer = styled.div`
-  margin: 0 auto;
+  margin: 2rem auto;
   border: 1px solid white;
-  padding: 4rem 2rem;
-  width: 500px;
+  padding: 5rem 2rem;
+  width: 380px;
   border-radius: 5px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   text-align: center;
-  font-size: 2rem;
   h1 {
-    border-bottom: 1px solid white;
     display: inline;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Oxygen', 'Ubuntu';
+    font-size: 1.75rem;
   }
 `;
 

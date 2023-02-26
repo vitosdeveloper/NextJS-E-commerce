@@ -1,18 +1,20 @@
-import { MongoClient } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
-function connectToCollections() {
-  let itensCollection = null;
-  let usersCollection = null;
+const uri = process.env.URI!;
+const client = new MongoClient(uri);
+
+function connectToCollections(): any {
   try {
-    const uri = process.env.URI!;
-    const client = new MongoClient(uri);
-    itensCollection = client.db('ecommerce').collection('itens');
-    usersCollection = client.db('ecommerce').collection('users');
-
+    const itensCollection: Collection<Document> = client
+      .db('ecommerce')
+      .collection('itens');
+    const usersCollection: Collection<Document> = client
+      .db('ecommerce')
+      .collection('accounts');
     return { itensCollection, usersCollection };
   } catch (err) {
     console.log(err);
-    return { itensCollection, usersCollection };
+    return { err };
   }
 }
 

@@ -1,3 +1,4 @@
+import { useGlobalContext } from '@/context/GlobalContext';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -6,6 +7,7 @@ import NavInput from './form/NavInput';
 type Props = {};
 
 const Navbar = (props: Props) => {
+  const { isLoggedIn } = useGlobalContext();
   return (
     <Nav>
       <Link href='/todos'>
@@ -13,7 +15,11 @@ const Navbar = (props: Props) => {
       </Link>
       <NavInput />
       <LinkList>
-        <Link href='/login'>Login</Link>
+        {isLoggedIn ? (
+          <Link href='/profile'>Profile</Link>
+        ) : (
+          <Link href='/login'>Login</Link>
+        )}
         <Link href='/favoritos'>Favoritos</Link>
         <Link href='/carrinho'>Carrinho</Link>
         <Link href='/hist'>Meus pedidos</Link>

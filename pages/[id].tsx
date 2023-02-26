@@ -28,7 +28,7 @@ export async function getStaticProps(context: { params: { id: string } }) {
     arr.map((item) => ({ ...item, _id: item._id.toString() }));
 
   try {
-    const query = await itensCollection!.find().toArray();
+    const query: WithId<Document>[] = await itensCollection!.find().toArray();
     if (id === 'todos') {
       const storeItens = transformId(query);
       return {
