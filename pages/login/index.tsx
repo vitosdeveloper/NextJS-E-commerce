@@ -1,11 +1,20 @@
 import LoginContainer from '@/components/containers/LoginContainer';
 import MenuContainer from '@/components/containers/MenuContainer';
+import { useGlobalContext } from '@/context/GlobalContext';
 import Link from 'next/link';
-import React from 'react';
+import Router from 'next/router';
+import React, { useEffect } from 'react';
 
 type Props = {};
 
 const Login = (props: Props) => {
+  const { isLoggedIn } = useGlobalContext();
+
+  useEffect(() => {
+    if (window.localStorage.getItem('storeJwt')) {
+      Router.push('/profile');
+    }
+  }, [isLoggedIn]);
   return (
     <LoginContainer>
       <Link href='/login/logar'>

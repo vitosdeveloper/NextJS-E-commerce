@@ -6,7 +6,13 @@ import { useGlobalContext } from '@/context/GlobalContext';
 import useFetch from '@/custom-hooks/useFetch';
 import Link from 'next/link';
 import Router from 'next/router';
-import { useState } from 'react';
+import {
+  MutableRefObject,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { BarLoader } from 'react-spinners';
 
 type Props = {};
@@ -16,6 +22,7 @@ const Logar = (props: Props) => {
   const [password, setPassword] = useState<string>('');
   const { isLoggedIn, setIsLoggedIn, checkJwt } = useGlobalContext();
   const { error, loading, request } = useFetch();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const userHasTyped = login.length > 0 && password.length > 0;
 
@@ -29,8 +36,9 @@ const Logar = (props: Props) => {
           body: JSON.stringify({ login, password }),
         }
       );
+
       if (response?.ok) {
-        localStorage.setItem('storeJwt', JSON.stringify(json.token));
+        localStorage.setItem('storeJwt', json.token);
         const check = await checkJwt();
         if (check) {
           Router.push('/todos');
@@ -39,11 +47,25 @@ const Logar = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (window.localStorage.getItem('storeJwt')) {
+      Router.push('/profile');
+    } else {
+      inputRef.current?.focus();
+    }
+  }, [isLoggedIn]);
+
   return (
     <LoginContainer>
       <LoginForm onSubmit={handleSubmit}>
         <div>
-          <Input type='text' value={login} setState={setLogin} label='Login' />
+          <Input
+            inputRef={inputRef}
+            type='text'
+            value={login}
+            setState={setLogin}
+            label='Login'
+          />
           <Input
             type='password'
             value={password}

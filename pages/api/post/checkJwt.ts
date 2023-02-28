@@ -12,7 +12,8 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const token = JSON.parse(req.body);
-      const decoded = jwt.verify(token, jwtSecret);
+      const decoded = await jwt.verify(token, jwtSecret);
+
       if (decoded) {
         const { id } = decoded.data;
         res.status(200).json({ id });

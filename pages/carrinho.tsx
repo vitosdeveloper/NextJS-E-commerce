@@ -56,6 +56,7 @@ const Carrinho = (props: Props) => {
 
     setPrecoTotal(todosPrecos);
   }, [itensQuantidade, itensFromLocalstorage]);
+
   return (
     <MenuContainer>
       <Title>Carrinho🛒</Title>

@@ -1,5 +1,9 @@
 import useFetch from '@/custom-hooks/useFetch';
 import {
+  clearUserIdOnCookie,
+  setUserIdandJwtOnCookie,
+} from '@/utils/cookiesManager';
+import {
   createContext,
   Dispatch,
   SetStateAction,
@@ -12,13 +16,13 @@ import {
 interface IGlobalContext {
   isLoggedIn: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-  checkJwt: () => false | Promise<{ id: string }>;
+  checkJwt: () => Promise<boolean>;
 }
 
 const GlobalContext = createContext<IGlobalContext>({
   isLoggedIn: false,
   setIsLoggedIn: () => {},
-  checkJwt: () => false,
+  checkJwt: async () => false,
 });
 
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -31,26 +35,34 @@ const GlobalProvider = ({ children }: Props) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { data, error, request } = useFetch();
 
+  const logout = () => {
+    clearUserIdOnCookie();
+    window.localStorage.removeItem('storeJwt');
+    setIsLoggedIn(false);
+  };
+
   const checkJwt = useCallback(async () => {
-    const token = window.localStorage.getItem('storeJwt');
+    const token = window.localStorage.getItem('storeJwt') || '';
+
     if (token) {
       const { response, json } = await request(
         process.env.NEXT_PUBLIC_URL + '/api/post/checkJwt',
         {
           method: 'POST',
-          body: token,
+          body: JSON.stringify(token),
         }
       );
+
       if (response!.ok) {
         setIsLoggedIn(true);
-        return json.id;
+        setUserIdandJwtOnCookie({ id: json.id, jwt: token });
+        return true;
       } else {
-        setIsLoggedIn(true);
-        window.localStorage.removeItem('storeJwt');
+        logout();
         return false;
       }
     } else {
-      setIsLoggedIn(false);
+      logout();
       return false;
     }
   }, [request]);

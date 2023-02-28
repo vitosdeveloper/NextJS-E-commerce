@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, HTMLInputTypeAttribute, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 type Props = {
@@ -6,15 +6,17 @@ type Props = {
   value: string;
   setState: Dispatch<SetStateAction<string>>;
   type: string;
+  inputRef?: React.RefObject<HTMLInputElement>;
 };
 
-const Input = ({ label, type, value, setState }: Props) => {
+const Input = ({ label, type, value, inputRef, setState }: Props) => {
   return (
     <InputContainer>
       <InputLabel>
         <h1>{label}</h1>
       </InputLabel>
       <StyledInput
+        ref={inputRef}
         value={value}
         onChange={({ target }) => setState(target.value)}
         type={type}
