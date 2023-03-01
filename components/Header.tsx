@@ -1,19 +1,21 @@
 import { useGlobalContext } from '@/context/GlobalContext';
+import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import NavInput from './form/NavInput';
+import HeaderSearchInput from './form/HeaderSearchInput';
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const { isLoggedIn } = useGlobalContext();
+
   return (
-    <Nav>
+    <Header>
       <Link href='/todos'>
         <Logo>Next Ecommerce</Logo>
       </Link>
-      <NavInput />
+      <HeaderSearchInput />
       <LinkList>
         {isLoggedIn ? (
           <Link href='/profile'>Profile</Link>
@@ -24,13 +26,13 @@ const Navbar = (props: Props) => {
         <Link href='/carrinho'>Carrinho</Link>
         <Link href='/hist'>Meus pedidos</Link>
       </LinkList>
-    </Nav>
+    </Header>
   );
 };
 
 export default Navbar;
 
-export const Nav = styled.nav`
+export const Header = styled.header`
   background: #0c0c0c;
   padding: 1rem 2rem;
   display: grid;
