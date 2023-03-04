@@ -65,7 +65,7 @@ const Profile = ({ userData }: Props) => {
   const { data, error, loading, request } = useFetch();
   const router = useRouter();
 
-  const { isLoggedIn, checkJwt } = useGlobalContext();
+  const { isLoggedIn, checkJwt, logout } = useGlobalContext();
 
   const handleSave = async () => {
     setEditing(false);
@@ -139,7 +139,8 @@ const Profile = ({ userData }: Props) => {
             <p>{endereco}</p>
             <h3>Sexo: </h3>
             <p>{sexo}</p>
-            <button onClick={() => setEditing(true)}>editar</button>
+            <button onClick={() => setEditing(true)}>Editar</button>
+            <button onClick={logout}>Logout</button>
           </>
         )}
       </ProfileContainer>

@@ -17,12 +17,14 @@ interface IGlobalContext {
   isLoggedIn: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   checkJwt: () => Promise<boolean>;
+  logout: () => void;
 }
 
 const GlobalContext = createContext<IGlobalContext>({
   isLoggedIn: false,
   setIsLoggedIn: () => {},
   checkJwt: async () => false,
+  logout: () => {},
 });
 
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -72,7 +74,9 @@ const GlobalProvider = ({ children }: Props) => {
   }, [checkJwt]);
 
   return (
-    <GlobalContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkJwt }}>
+    <GlobalContext.Provider
+      value={{ isLoggedIn, setIsLoggedIn, checkJwt, logout }}
+    >
       {children}
     </GlobalContext.Provider>
   );
