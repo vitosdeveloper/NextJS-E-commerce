@@ -31,3 +31,20 @@ export type UserType = {
     _id: ObjectId | string;
   }[];
 };
+
+export type reformatedForPurchaseHistory = {
+  _id: string;
+  itens: {
+    _id: string;
+    quantidade: number;
+    preco: string;
+    productImg: string;
+    productTitle: string;
+    productPrice: string;
+    class: string;
+    status: string;
+    estoque: number;
+    numDeCompras: number;
+  }[];
+  detalhes: { valor: number; dataDaCompra: string };
+};
