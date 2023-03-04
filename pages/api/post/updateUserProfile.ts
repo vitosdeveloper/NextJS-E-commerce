@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { itensCollection, usersCollection } from '../../../utils/dbConnect';
-import { ObjectId, WithId } from 'mongodb';
-import { IStoreItem } from '@/types/types';
+import { usersCollection } from '../../../utils/dbConnect';
+import { ObjectId } from 'mongodb';
 
 type Data =
   | { toUpdate: { nome: string; endereco: string; sexo: string } }

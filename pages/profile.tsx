@@ -8,6 +8,7 @@ import Router from 'next/router';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import ButtonProfile from '@/components/form/ButtonProfile';
 
 export const getServerSideProps = async (context: any) => {
   try {
@@ -15,6 +16,7 @@ export const getServerSideProps = async (context: any) => {
     const jwtSecret = process.env.JWT_SECRET;
 
     const { id, jwt: token } = JSON.parse(context.req.headers.cookie.slice(9));
+
     const decoded = await jwt.verify(token, jwtSecret);
 
     if (decoded && id === decoded.data.id) {
@@ -127,8 +129,8 @@ const Profile = ({ userData }: Props) => {
               <option value='Masculino'>Masculino</option>
               <option value='Feminino'>Feminino</option>
             </select>
-            <button onClick={handleSave}>salvar</button>
-            <button onClick={handleCancel}>cancelar</button>
+            <ButtonProfile onClick={handleSave}>salvar</ButtonProfile>
+            <ButtonProfile onClick={handleCancel}>cancelar</ButtonProfile>
           </>
         ) : (
           <>
@@ -139,8 +141,10 @@ const Profile = ({ userData }: Props) => {
             <p>{endereco}</p>
             <h3>Sexo: </h3>
             <p>{sexo}</p>
-            <button onClick={() => setEditing(true)}>Editar</button>
-            <button onClick={logout}>Logout</button>
+            <ButtonProfile onClick={() => setEditing(true)}>
+              Editar
+            </ButtonProfile>
+            <ButtonProfile onClick={logout}>Logout</ButtonProfile>
           </>
         )}
       </ProfileContainer>

@@ -7,10 +7,13 @@ import { IStoreItem } from '@/types/types';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import priceFormater from '@/utils/priceFormater';
+import { useGlobalContext } from '@/context/GlobalContext';
+import Link from 'next/link';
 
 type Props = {};
 
 const Carrinho = (props: Props) => {
+  const { isLoggedIn } = useGlobalContext();
   const { itensFromLocalstorage, removeFromLocalStorage } =
     useGetItensById('storeCartItens');
   const [precoTotal, setPrecoTotal] = useState<number>(0);
@@ -84,9 +87,23 @@ const Carrinho = (props: Props) => {
 
       <FinalizarCompra>
         <h2>Preço total: {priceFormater(precoTotal)}</h2>
-        <ButtonFavAndCart style={{ width: '300px' }}>
-          Logue para continuar com a compra.
-        </ButtonFavAndCart>
+        {isLoggedIn ? (
+          itensFromLocalstorage?.length ? (
+            <ButtonFavAndCart style={{ width: '300px' }}>
+              Comprar
+            </ButtonFavAndCart>
+          ) : (
+            <ButtonFavAndCart style={{ width: '300px' }}>
+              Você não possui nenhum item no carrinho.
+            </ButtonFavAndCart>
+          )
+        ) : (
+          <Link href='/login'>
+            <ButtonFavAndCart style={{ width: '300px' }}>
+              Logue para continuar com a compra.
+            </ButtonFavAndCart>
+          </Link>
+        )}
       </FinalizarCompra>
     </MenuContainer>
   );

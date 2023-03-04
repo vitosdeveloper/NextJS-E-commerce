@@ -9,7 +9,7 @@ type Props = {
   inputRef?: React.RefObject<HTMLInputElement>;
 };
 
-const Input = ({ label, type, value, inputRef, setState }: Props) => {
+const Input = ({ label, type, value, inputRef, setState, ...props }: Props) => {
   return (
     <InputContainer>
       <InputLabel>
@@ -20,6 +20,7 @@ const Input = ({ label, type, value, inputRef, setState }: Props) => {
         value={value}
         onChange={({ target }) => setState(target.value)}
         type={type}
+        {...props}
       />
     </InputContainer>
   );

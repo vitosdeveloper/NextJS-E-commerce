@@ -1,18 +1,13 @@
 import LoginContainer from '@/components/containers/LoginContainer';
 import { LoginForm } from '@/components/containers/LoginFormContainer';
+import ButtonProfile from '@/components/form/ButtonProfile';
 import { Error } from '@/components/form/Error';
 import Input from '@/components/form/Input';
 import { useGlobalContext } from '@/context/GlobalContext';
 import useFetch from '@/custom-hooks/useFetch';
 import Link from 'next/link';
 import Router from 'next/router';
-import {
-  MutableRefObject,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BarLoader } from 'react-spinners';
 
 type Props = {};
@@ -20,10 +15,10 @@ type Props = {};
 const Logar = (props: Props) => {
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { isLoggedIn, setIsLoggedIn, checkJwt } = useGlobalContext();
   const { error, loading, request } = useFetch();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { isLoggedIn, checkJwt } = useGlobalContext();
   const userHasTyped = login.length > 0 && password.length > 0;
 
   const handleSubmit = async (e: any) => {
@@ -39,10 +34,7 @@ const Logar = (props: Props) => {
 
       if (response?.ok) {
         localStorage.setItem('storeJwt', json.token);
-        const check = await checkJwt();
-        if (check) {
-          Router.push('/todos');
-        }
+        await checkJwt();
       }
     }
   };
@@ -83,7 +75,7 @@ const Logar = (props: Props) => {
               color='#6336d6f2'
             />
           ) : (
-            userHasTyped && <button type='submit'>Logar</button>
+            userHasTyped && <ButtonProfile type='submit'>Logar</ButtonProfile>
           )}
         </div>
       </LoginForm>
