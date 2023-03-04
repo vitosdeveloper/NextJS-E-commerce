@@ -1,5 +1,6 @@
 import priceFormater from '@/utils/priceFormater';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -20,20 +21,22 @@ type Props = {
 
 const ItemFromThePurchase = ({ purchasedItem }: Props) => {
   return (
-    <ItemFromThePurchaseContainer>
-      <Image
-        src={purchasedItem.productImg || ''}
-        width={90}
-        height={90}
-        alt=''
-        style={{ borderRadius: '5px' }}
-      />
-      <h3>{purchasedItem.productTitle}</h3>
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <p>Quantidade: {purchasedItem.quantidade}</p>
-        <p>Preço por unidade: {priceFormater(purchasedItem.preco)}</p>
-      </div>
-    </ItemFromThePurchaseContainer>
+    <Link href={'/item/' + purchasedItem._id}>
+      <ItemFromThePurchaseContainer>
+        <Image
+          src={purchasedItem.productImg || ''}
+          width={90}
+          height={90}
+          alt=''
+          style={{ borderRadius: '5px' }}
+        />
+        <h3>{purchasedItem.productTitle}</h3>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <p>Quantidade: {purchasedItem.quantidade}</p>
+          <p>Preço por unidade: {priceFormater(purchasedItem.preco)}</p>
+        </div>
+      </ItemFromThePurchaseContainer>
+    </Link>
   );
 };
 
