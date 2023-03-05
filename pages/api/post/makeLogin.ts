@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 import type { NextApiRequest, NextApiResponse } from 'next';

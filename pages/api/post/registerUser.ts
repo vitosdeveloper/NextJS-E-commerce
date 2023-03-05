@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { usersCollection } from '../../../utils/dbConnect';
 const bcrypt = require('bcrypt');
