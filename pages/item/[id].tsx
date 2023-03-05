@@ -1,4 +1,8 @@
 import ButtonFavAndCart from '@/components/form/ButtonFavAndCart';
+import {
+  ItemQuantityContainer,
+  QuantityButton,
+} from '@/components/StoreItemSmall';
 import Title from '@/components/text/Title';
 import { IStoreItem } from '@/types/types';
 import { itensCollection } from '@/utils/dbConnect';
@@ -6,6 +10,7 @@ import priceFormater from '@/utils/priceFormater';
 import { putIntoLocalStorage } from '@/utils/putIntoLocalStorage';
 import { ObjectId, WithId } from 'mongodb';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 export const getStaticPaths = async () => {
@@ -19,7 +24,6 @@ export const getStaticPaths = async () => {
       fallback: false,
     };
   } catch (err) {
-    console.log(err);
     return { paths: [], fallback: false };
   }
 };
@@ -51,6 +55,7 @@ export const getStaticProps = async (context: { params: { id: string } }) => {
 type Props = { storeItem: IStoreItem };
 
 const ItemPage = ({ storeItem }: Props) => {
+  const [quantity, setQuantity] = useState<number>(0);
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
     storeItem;
 
@@ -58,6 +63,18 @@ const ItemPage = ({ storeItem }: Props) => {
     e.preventDefault();
     putIntoLocalStorage('storeCartItens', _id);
   };
+
+  const handleSubItemByOne = () => {
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+  const handleAddItemByOne = () => {
+    if (quantity > 0 && quantity < estoque) setQuantity(quantity + 1);
+  };
+
+  useEffect(() => {
+    if (estoque === 0) setQuantity(0);
+    else setQuantity(1);
+  }, [estoque]);
 
   return (
     <ItemContainer>
@@ -78,6 +95,15 @@ const ItemPage = ({ storeItem }: Props) => {
             Comprado <strong>{numDeCompras}</strong> vezes.
           </p>
           <h2>{priceFormater(productPrice)}</h2>
+          {estoque > 0 ? (
+            <ItemQuantityContainer>
+              <QuantityButton onClick={handleSubItemByOne}>-</QuantityButton>
+              <span>{quantity}</span>
+              <QuantityButton onClick={handleAddItemByOne}>+</QuantityButton>
+            </ItemQuantityContainer>
+          ) : (
+            <h4>Fora de estoque</h4>
+          )}
           <FlexWithGap style={{ display: 'flex', gap: '1rem' }}>
             <ButtonFavAndCart onClick={handlePutOnCartClick}>
               Colocar no carrinho

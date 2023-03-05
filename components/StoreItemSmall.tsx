@@ -123,13 +123,13 @@ const SmallTitleAndPrice = styled.div`
   max-width: 700px;
 `;
 
-const ItemQuantityContainer = styled.div`
+export const ItemQuantityContainer = styled.div`
   display: flex;
   gap: 0.25rem;
   align-items: center;
 `;
 
-const QuantityButton = styled.button`
+export const QuantityButton = styled.button`
   padding: 0.15rem 0.3rem;
   &:hover {
     cursor: pointer;
