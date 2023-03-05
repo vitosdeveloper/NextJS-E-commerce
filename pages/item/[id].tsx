@@ -7,6 +7,7 @@ import {
 import Title from '@/components/text/Title';
 import { useGlobalContext } from '@/context/GlobalContext';
 import useFetch from '@/custom-hooks/useFetch';
+import usePurchaseModal from '@/custom-hooks/usePurchaseModal';
 import { IStoreItem } from '@/types/types';
 import { itensCollection } from '@/utils/dbConnect';
 import getHours from '@/utils/getHours';
@@ -62,12 +63,15 @@ type Props = { storeItem: IStoreItem };
 
 const ItemPage = ({ storeItem }: Props) => {
   const [quantity, setQuantity] = useState<number>(0);
-  const [modal, setModal] = useState<boolean>(false);
-  const { data, loading, error, request } = useFetch();
 
-  const { isLoggedIn, checkJwt } = useGlobalContext();
+  const { isLoggedIn } = useGlobalContext();
   const { productImg, productTitle, estoque, numDeCompras, productPrice, _id } =
     storeItem;
+  const totalPrice = quantity * Number(productPrice);
+  const { ModalComponent, setModal } = usePurchaseModal(
+    [{ _id, quantity }],
+    totalPrice
+  );
 
   const handlePutOnCartClick = (e: any) => {
     e.preventDefault();
@@ -79,31 +83,6 @@ const ItemPage = ({ storeItem }: Props) => {
   const handleAddItemByOne = () => {
     if (quantity > 0 && quantity < estoque) setQuantity(quantity + 1);
   };
-  const handleSubmitPurchase = async () => {
-    try {
-      if (await checkJwt()) {
-        const token = window.localStorage.getItem('storeJwt');
-
-        const { response, json } = await request(
-          process.env.NEXT_PUBLIC_URL + '/api/post/processPurchases',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              purchaseDate: getHours(),
-              itens: [{ _id, quantity }],
-              token,
-            }),
-          }
-        );
-        if (response?.ok) {
-          setModal(false);
-          Router.push('/hist');
-        } else throw new Error();
-      } else throw new Error();
-    } catch (err: any) {
-      setModal(false);
-    }
-  };
 
   useEffect(() => {
     if (estoque === 0) setQuantity(0);
@@ -112,14 +91,7 @@ const ItemPage = ({ storeItem }: Props) => {
 
   return (
     <ItemContainer>
-      {modal && (
-        <PurchaseModal
-          handleSubmitPurchase={handleSubmitPurchase}
-          setModal={setModal}
-          totalPrice={Number(productPrice) * quantity}
-          loading={loading}
-        />
-      )}
+      {ModalComponent()}
       <Title>{productTitle}</Title>
       <FlexWithGap>
         <Image

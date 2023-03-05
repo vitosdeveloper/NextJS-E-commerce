@@ -28,7 +28,7 @@ const PurchaseModal = ({
     target,
     currentTarget,
   }: React.MouseEvent) => {
-    if (target === currentTarget) {
+    if (target === currentTarget && !loading) {
       setModal(false);
     }
   };

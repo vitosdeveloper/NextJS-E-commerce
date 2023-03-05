@@ -10,7 +10,7 @@ type Data = {};
 
 type Purchases = {
   purchaseDate: string;
-  itens: { _id: string; quantity: number }[];
+  items: { _id: string; quantity: number }[];
   token: string;
 };
 
@@ -35,7 +35,7 @@ export default async function handler(
     try {
       const {
         purchaseDate,
-        itens: itemsToPurchase,
+        items: itemsToPurchase,
         token,
       }: Purchases = JSON.parse(req.body);
 
@@ -70,6 +70,12 @@ export default async function handler(
         };
 
         const decoded = await jwt.verify(token, jwtSecret);
+        if (!decoded) {
+          res
+            .status(500)
+            .json({ message: 'Seu token de autenticação expirou.' });
+        }
+
         const { id: userId } = decoded.data;
 
         const findUser: UserType = await usersCollection.findOne({
@@ -89,14 +95,15 @@ export default async function handler(
           const { _id, quantity } = itemToDiscountFromStock;
           await itensCollection.updateOne(
             { _id: new ObjectId(_id) },
-            { $inc: { estoque: -quantity } }
+            { $inc: { estoque: -quantity, numDeCompras: +quantity } }
           );
         }
 
         res.status(200).json({});
-      } else {
-        throw new Error('Algum item está fora de estoque.');
-      }
+      } else
+        res
+          .status(500)
+          .json({ message: 'Algum dos itens está fora de estoque.' });
     } catch (err: any) {
       const { message } = err;
       res.status(err.status).json({ message });
