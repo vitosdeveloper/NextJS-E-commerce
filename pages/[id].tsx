@@ -6,7 +6,7 @@ import { StoreItens } from '@/components/mainPage/StoreItens';
 import StoreItensContainer from '@/components/mainPage/StoreItensContainer';
 import { IStoreItem } from '@/types/types';
 import Link from 'next/link';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import usePagination from '@/custom-hooks/usePagination';
 import { itensCollection } from '@/utils/dbConnect';
 import { Document, WithId } from 'mongodb';
@@ -33,12 +33,14 @@ export async function getStaticProps(context: { params: { id: string } }) {
       const storeItens = transformId(query);
       return {
         props: { storeItens, page: id },
+        revalidate: 10,
       };
     } else if (id === 'promocao') {
       const filtered = query.filter((item) => item.status === 'promoção');
       const storeItens = transformId(filtered);
       return {
         props: { storeItens, page: id },
+        revalidate: 10,
       };
     } else if (id === 'maiscomprados') {
       const filtered = query
@@ -50,12 +52,14 @@ export async function getStaticProps(context: { params: { id: string } }) {
       const storeItens = transformId(filtered);
       return {
         props: { storeItens, page: id },
+        revalidate: 10,
       };
     }
   } catch (err) {
     console.log(err);
     return {
       props: { storeItens: [], page: id },
+      revalidate: 10,
     };
   }
 }
