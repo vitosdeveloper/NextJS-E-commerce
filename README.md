@@ -1,4 +1,4 @@
-Live version: https://next-e-commerce.netlify.app/todos\
+Live version: https://next-e-commerce.netlify.app/todos \
 My linkedin: https://www.linkedin.com/in/vitosnatios/
 
 E-mail: vitosdeveloper@gmail.com
