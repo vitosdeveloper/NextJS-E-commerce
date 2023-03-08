@@ -3,7 +3,7 @@ My linkedin: https://www.linkedin.com/in/vitosnatios/
 
 E-mail: vitosdeveloper@gmail.com
 
-# My Fictional E-commerce
+# NextJS-E-commerce
 
 This project wasnt made using any type of tutorial and its not part of any exercise or job.
 
