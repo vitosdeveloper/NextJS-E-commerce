@@ -64,7 +64,7 @@ const Profile = ({ userData }: Props) => {
   const [editNome, setEditNome] = useState<string>(nome);
   const [editEndereco, setEditEndereco] = useState<string>(endereco);
   const [editSexo, setEditSexo] = useState<string>(sexo);
-  const { data, error, loading, request } = useFetch();
+  const { request } = useFetch();
   const router = useRouter();
 
   const { isLoggedIn, checkJwt, logout } = useGlobalContext();

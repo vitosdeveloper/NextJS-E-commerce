@@ -42,6 +42,7 @@ export const getStaticProps = async (context: { params: { id: string } }) => {
     const itemWithWrongId: WithId<Document> = await itensCollection!.findOne(
       query
     );
+
     const storeItem = {
       ...itemWithWrongId,
       _id: itemWithWrongId?._id.toString(),

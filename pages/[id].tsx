@@ -56,7 +56,6 @@ export async function getStaticProps(context: { params: { id: string } }) {
       };
     }
   } catch (err) {
-    console.log(err);
     return {
       props: { storeItens: [], page: id },
       revalidate: 10,
